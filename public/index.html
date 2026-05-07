@@ -1,476 +1,585 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MoodFlick — AI Mood Movie Engine</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;700&family=Barlow+Condensed:wght@400;700;900&display=swap" rel="stylesheet">
-<style>
-  *{box-sizing:border-box;margin:0;padding:0}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MoodFlick — AI Mood Movie Engine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;700&family=Barlow+Condensed:wght@400;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-  :root{
-    --black:#0a0a0a;
-    --white:#f5f0e8;
-    --yellow:#FFD600;
-    --red:#FF3B3B;
-    --blue:#1a1aff;
-    --border:3px solid #0a0a0a;
-    --shadow:4px 4px 0 #0a0a0a;
-    --shadow-lg:6px 6px 0 #0a0a0a;
-  }
+      :root {
+        --black: #0a0a0a;
+        --white: #f5f0e8;
+        --yellow: #ffd600;
+        --red: #ff3b3b;
+        --blue: #1a1aff;
+        --border: 3px solid #0a0a0a;
+        --shadow: 4px 4px 0 #0a0a0a;
+        --shadow-lg: 6px 6px 0 #0a0a0a;
+      }
 
-  html,body{
-    background:var(--white);
-    font-family:'IBM Plex Mono',monospace;
-    color:var(--black);
-    min-height:100vh;
-  }
+      html,
+      body {
+        background: var(--white);
+        font-family: "IBM Plex Mono", monospace;
+        color: var(--black);
+        min-height: 100vh;
+      }
 
-  #app{width:100%;max-width:920px;margin:0 auto;padding:20px 16px 48px}
+      #app {
+        width: 100%;
+        max-width: 920px;
+        margin: 0 auto;
+        padding: 20px 16px 48px;
+      }
 
-  /* HEADER */
-  .header{
-    border:var(--border);
-    background:var(--yellow);
-    padding:16px 22px;
-    margin-bottom:16px;
-    box-shadow:var(--shadow-lg);
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    flex-wrap:wrap;
-    gap:10px;
-  }
-  .logo{
-    font-family:'Bebas Neue',sans-serif;
-    font-size:52px;
-    letter-spacing:3px;
-    line-height:1;
-  }
-  .logo span{color:var(--red)}
-  .tagline{
-    font-size:10px;
-    font-weight:700;
-    text-transform:uppercase;
-    letter-spacing:2px;
-    border:2px solid var(--black);
-    padding:5px 10px;
-    background:var(--black);
-    color:var(--yellow);
-  }
+      /* HEADER */
+      .header {
+        border: var(--border);
+        background: var(--yellow);
+        padding: 16px 22px;
+        margin-bottom: 16px;
+        box-shadow: var(--shadow-lg);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .logo {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 52px;
+        letter-spacing: 3px;
+        line-height: 1;
+      }
+      .logo span {
+        color: var(--red);
+      }
+      .tagline {
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        border: 2px solid var(--black);
+        padding: 5px 10px;
+        background: var(--black);
+        color: var(--yellow);
+      }
 
-  /* INPUT SECTION */
-  .mood-section{
-    border:var(--border);
-    padding:22px;
-    background:var(--black);
-    box-shadow:var(--shadow-lg);
-    margin-bottom:16px;
-  }
-  .mood-label{
-    font-size:10px;
-    font-weight:700;
-    text-transform:uppercase;
-    letter-spacing:3px;
-    color:var(--yellow);
-    margin-bottom:12px;
-    display:block;
-  }
-  .mood-input{
-    width:100%;
-    border:3px solid var(--yellow);
-    padding:14px 16px;
-    font-family:'IBM Plex Mono',monospace;
-    font-size:14px;
-    background:transparent;
-    color:var(--white);
-    outline:none;
-    resize:none;
-    height:90px;
-    box-shadow:3px 3px 0 var(--yellow);
-    line-height:1.6;
-  }
-  .mood-input::placeholder{color:#555}
-  .mood-input:focus{box-shadow:5px 5px 0 var(--yellow)}
+      /* INPUT SECTION */
+      .mood-section {
+        border: var(--border);
+        padding: 22px;
+        background: var(--black);
+        box-shadow: var(--shadow-lg);
+        margin-bottom: 16px;
+      }
+      .mood-label {
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        color: var(--yellow);
+        margin-bottom: 12px;
+        display: block;
+      }
+      .mood-input {
+        width: 100%;
+        border: 3px solid var(--yellow);
+        padding: 14px 16px;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 14px;
+        background: transparent;
+        color: var(--white);
+        outline: none;
+        resize: none;
+        height: 90px;
+        box-shadow: 3px 3px 0 var(--yellow);
+        line-height: 1.6;
+      }
+      .mood-input::placeholder {
+        color: #555;
+      }
+      .mood-input:focus {
+        box-shadow: 5px 5px 0 var(--yellow);
+      }
 
-  .controls{
-    display:flex;
-    gap:10px;
-    margin-top:14px;
-    flex-wrap:wrap;
-    align-items:center;
-  }
+      .controls {
+        display: flex;
+        gap: 10px;
+        margin-top: 14px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
 
-  .btn{
-    border:var(--border);
-    padding:12px 24px;
-    font-family:'Bebas Neue',sans-serif;
-    font-size:22px;
-    letter-spacing:1px;
-    cursor:pointer;
-    box-shadow:var(--shadow);
-    transition:transform .1s,box-shadow .1s;
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    text-decoration:none;
-  }
-  .btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--black)}
-  .btn:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--black)}
-  .btn-yellow{background:var(--yellow);color:var(--black)}
-  .btn-black{background:var(--black);color:var(--yellow)}
-  .btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important;box-shadow:var(--shadow)!important}
+      .btn {
+        border: var(--border);
+        padding: 12px 24px;
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 22px;
+        letter-spacing: 1px;
+        cursor: pointer;
+        box-shadow: var(--shadow);
+        transition:
+          transform 0.1s,
+          box-shadow 0.1s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+      }
+      .btn:hover {
+        transform: translate(-2px, -2px);
+        box-shadow: 6px 6px 0 var(--black);
+      }
+      .btn:active {
+        transform: translate(2px, 2px);
+        box-shadow: 2px 2px 0 var(--black);
+      }
+      .btn-yellow {
+        background: var(--yellow);
+        color: var(--black);
+      }
+      .btn-black {
+        background: var(--black);
+        color: var(--yellow);
+      }
+      .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none !important;
+        box-shadow: var(--shadow) !important;
+      }
 
-  .mood-badge{
-    display:none;
-    flex-wrap:wrap;
-    gap:6px;
-    align-items:center;
-    font-family:'Bebas Neue',sans-serif;
-    letter-spacing:1px;
-  }
+      .mood-badge {
+        display: none;
+        flex-wrap: wrap;
+        gap: 6px;
+        align-items: center;
+        font-family: "Bebas Neue", sans-serif;
+        letter-spacing: 1px;
+      }
 
-  /* TOGGLE */
-  .toggle-wrap{
-    display:flex;
-    border:var(--border);
-    overflow:hidden;
-    box-shadow:var(--shadow);
-    margin-bottom:16px;
-  }
-  .toggle-btn{
-    flex:1;
-    padding:12px;
-    font-family:'Bebas Neue',sans-serif;
-    font-size:20px;
-    letter-spacing:1px;
-    cursor:pointer;
-    border:none;
-    background:var(--white);
-    color:var(--black);
-    transition:background .15s,color .15s;
-  }
-  .toggle-btn.active{background:var(--black);color:var(--yellow)}
-  .toggle-btn:not(.active):hover{background:#e8e3db}
+      /* TOGGLE */
+      .toggle-wrap {
+        display: flex;
+        border: var(--border);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        margin-bottom: 16px;
+      }
+      .toggle-btn {
+        flex: 1;
+        padding: 12px;
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 20px;
+        letter-spacing: 1px;
+        cursor: pointer;
+        border: none;
+        background: var(--white);
+        color: var(--black);
+        transition:
+          background 0.15s,
+          color 0.15s;
+      }
+      .toggle-btn.active {
+        background: var(--black);
+        color: var(--yellow);
+      }
+      .toggle-btn:not(.active):hover {
+        background: #e8e3db;
+      }
 
-  /* STATUS BAR */
-  #statusBar{
-    display:none;
-    border:var(--border);
-    padding:16px 20px;
-    margin-bottom:16px;
-    box-shadow:var(--shadow);
-    font-family:'Bebas Neue',sans-serif;
-    font-size:20px;
-    letter-spacing:2px;
-    text-align:center;
-  }
-  #statusBar.loading{background:var(--yellow)}
-  #statusBar.error{background:var(--red);color:var(--white)}
+      /* STATUS BAR */
+      #statusBar {
+        display: none;
+        border: var(--border);
+        padding: 16px 20px;
+        margin-bottom: 16px;
+        box-shadow: var(--shadow);
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 20px;
+        letter-spacing: 2px;
+        text-align: center;
+      }
+      #statusBar.loading {
+        background: var(--yellow);
+      }
+      #statusBar.error {
+        background: var(--red);
+        color: var(--white);
+      }
 
-  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
-  .pulsing{animation:pulse 1s ease-in-out infinite}
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+      .pulsing {
+        animation: pulse 1s ease-in-out infinite;
+      }
 
-  /* RESULTS */
-  #results{display:none}
-  .results-title{
-    font-family:'Bebas Neue',sans-serif;
-    font-size:26px;
-    letter-spacing:2px;
-    border-bottom:var(--border);
-    padding-bottom:10px;
-    margin-bottom:16px;
-  }
-  .results-title .hl{
-    background:var(--yellow);
-    padding:2px 8px;
-    border:2px solid var(--black);
-  }
+      /* RESULTS */
+      #results {
+        display: none;
+      }
+      .results-title {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 26px;
+        letter-spacing: 2px;
+        border-bottom: var(--border);
+        padding-bottom: 10px;
+        margin-bottom: 16px;
+      }
+      .results-title .hl {
+        background: var(--yellow);
+        padding: 2px 8px;
+        border: 2px solid var(--black);
+      }
 
-  /* CARDS */
-  .cards-grid{
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-    gap:14px;
-  }
-  @media(max-width:700px){.cards-grid{grid-template-columns:repeat(2,1fr)}}
-  @media(max-width:400px){.cards-grid{grid-template-columns:1fr 1fr}}
+      /* CARDS */
+      .cards-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 14px;
+      }
+      @media (max-width: 700px) {
+        .cards-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 400px) {
+        .cards-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
 
-  .card{
-    border:var(--border);
-    box-shadow:var(--shadow);
-    background:var(--white);
-    transition:transform .12s,box-shadow .12s;
-    overflow:hidden;
-    position:relative;
-  }
-  .card:hover{transform:translate(-3px,-3px);box-shadow:7px 7px 0 var(--black)}
+      .card {
+        border: var(--border);
+        box-shadow: var(--shadow);
+        background: var(--white);
+        transition:
+          transform 0.12s,
+          box-shadow 0.12s;
+        overflow: hidden;
+        position: relative;
+      }
+      .card:hover {
+        transform: translate(-3px, -3px);
+        box-shadow: 7px 7px 0 var(--black);
+      }
 
-  .card-num{
-    position:absolute;
-    top:6px;right:8px;
-    font-family:'Bebas Neue',sans-serif;
-    font-size:32px;
-    color:rgba(255,255,255,0.85);
-    line-height:1;
-    text-shadow:1px 1px 0 rgba(0,0,0,0.5);
-    z-index:2;
-  }
-  .card-img{
-    width:100%;
-    aspect-ratio:2/3;
-    object-fit:cover;
-    display:block;
-    border-bottom:var(--border);
-    background:#1a1a1a;
-  }
-  .card-no-img{
-    width:100%;
-    aspect-ratio:2/3;
-    background:var(--black);
-    border-bottom:var(--border);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-family:'Bebas Neue',sans-serif;
-    font-size:13px;
-    letter-spacing:1px;
-    color:#444;
-    text-align:center;
-    padding:10px;
-  }
-  .card-body{padding:10px 10px 12px}
-  .card-title{
-    font-family:'Barlow Condensed',sans-serif;
-    font-size:14px;
-    font-weight:700;
-    line-height:1.2;
-    margin-bottom:6px;
-  }
-  .card-meta{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-  }
-  .card-year{font-size:10px;color:#888}
-  .card-rating{
-    background:var(--yellow);
-    border:1.5px solid var(--black);
-    padding:2px 6px;
-    font-weight:700;
-    font-size:10px;
-    font-family:'IBM Plex Mono',monospace;
-  }
+      .card-num {
+        position: absolute;
+        top: 6px;
+        right: 8px;
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 32px;
+        color: rgba(255, 255, 255, 0.85);
+        line-height: 1;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+        z-index: 2;
+      }
+      .card-img {
+        width: 100%;
+        aspect-ratio: 2/3;
+        object-fit: cover;
+        display: block;
+        border-bottom: var(--border);
+        background: #1a1a1a;
+      }
+      .card-no-img {
+        width: 100%;
+        aspect-ratio: 2/3;
+        background: var(--black);
+        border-bottom: var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 13px;
+        letter-spacing: 1px;
+        color: #444;
+        text-align: center;
+        padding: 10px;
+      }
+      .card-body {
+        padding: 10px 10px 12px;
+      }
+      .card-title {
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 6px;
+      }
+      .card-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .card-year {
+        font-size: 10px;
+        color: #888;
+      }
+      .card-rating {
+        background: var(--yellow);
+        border: 1.5px solid var(--black);
+        padding: 2px 6px;
+        font-weight: 700;
+        font-size: 10px;
+        font-family: "IBM Plex Mono", monospace;
+      }
 
-  /* FOOTER */
-  .footer{
-    margin-top:24px;
-    border-top:var(--border);
-    padding-top:12px;
-    font-size:10px;
-    color:#888;
-    display:flex;
-    justify-content:space-between;
-    flex-wrap:wrap;
-    gap:8px;
-  }
-  .reset-link{
-    font-size:11px;
-    color:#888;
-    cursor:pointer;
-    text-decoration:underline;
-    margin-top:12px;
-    display:inline-block;
-    font-family:'IBM Plex Mono',monospace;
-  }
-  .reset-link:hover{color:var(--red)}
-</style>
-</head>
-<body>
-<div id="app">
+      .reset-link {
+        font-size: 11px;
+        color: #888;
+        cursor: pointer;
+        text-decoration: underline;
+        margin-top: 12px;
+        display: inline-block;
+        font-family: "IBM Plex Mono", monospace;
+      }
+      .reset-link:hover {
+        color: var(--red);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div class="header">
+        <div class="logo">MOOD<span>FLICK</span></div>
+        <div class="tagline">AI Mood → Movie Engine</div>
+      </div>
 
-  <div class="header">
-    <div class="logo">MOOD<span>FLICK</span></div>
-    <div class="tagline">AI Mood → Movie Engine</div>
-  </div>
+      <div class="mood-section">
+        <span class="mood-label">// How are you feeling right now?</span>
+        <textarea
+          class="mood-input"
+          id="moodText"
+          placeholder="e.g. I feel like the world is ending but I also want to laugh about it... or just 'bored and restless' — anything goes"
+          onkeydown="handleKey(event)"
+        ></textarea>
+        <div class="controls">
+          <button class="btn btn-yellow" id="analyzeBtn" onclick="analyze()">
+            ANALYZE MOOD →
+          </button>
+          <div class="mood-badge" id="moodBadge"></div>
+        </div>
+      </div>
 
-  <div class="mood-section">
-    <span class="mood-label">// How are you feeling right now?</span>
-    <textarea
-      class="mood-input"
-      id="moodText"
-      placeholder="e.g. I feel like the world is ending but I also want to laugh about it... or just 'bored and restless' — anything goes"
-      onkeydown="handleKey(event)"
-    ></textarea>
-    <div class="controls">
-      <button class="btn btn-yellow" id="analyzeBtn" onclick="analyze()">ANALYZE MOOD →</button>
-      <div class="mood-badge" id="moodBadge"></div>
+      <div id="statusBar"></div>
+
+      <div id="results">
+        <div class="toggle-wrap">
+          <button
+            class="toggle-btn active"
+            id="btnMovies"
+            onclick="switchMode('movie')"
+          >
+            🎬 TOP 5 MOVIES
+          </button>
+          <button class="toggle-btn" id="btnSeries" onclick="switchMode('tv')">
+            📺 TOP 5 SERIES
+          </button>
+        </div>
+        <div class="results-title">
+          TOP 5 <span class="hl" id="modeLabel">MOVIES</span> FOR YOUR
+          <span class="hl" id="moodLabel">—</span> MOOD
+        </div>
+        <div class="cards-grid" id="cardsGrid"></div>
+        <span class="reset-link" onclick="reset()">↩ try another mood</span>
+      </div>
     </div>
-  </div>
 
-  <div id="statusBar"></div>
+    <script>
+      const MOOD_EMOJI = {
+        happy: "😄",
+        sad: "😢",
+        heartbreak: "💔",
+        moving_on: "🚀",
+        excited: "⚡",
+        scared: "😱",
+        romantic: "❤️",
+        angry: "🔥",
+        anxious: "😬",
+        bored: "😑",
+        lonely: "🌧️",
+        nostalgic: "🌅",
+        inspired: "✨",
+        confused: "🌀",
+        peaceful: "🌿",
+        dark: "🌑",
+        hopeful: "🌤️",
+        empowered: "💪",
+        adventurous: "🧭",
+        cozy: "☕",
+      };
 
-  <div id="results">
-    <div class="toggle-wrap">
-      <button class="toggle-btn active" id="btnMovies" onclick="switchMode('movie')">🎬 TOP 5 MOVIES</button>
-      <button class="toggle-btn" id="btnSeries" onclick="switchMode('tv')">📺 TOP 5 SERIES</button>
-    </div>
-    <div class="results-title">
-      TOP 5 <span class="hl" id="modeLabel">MOVIES</span> FOR YOUR <span class="hl" id="moodLabel">—</span> MOOD
-    </div>
-    <div class="cards-grid" id="cardsGrid"></div>
-    <span class="reset-link" onclick="reset()">↩ try another mood</span>
-  </div>
+      let currentMode = "movie";
+      let currentMoods = [];
+      let isLoading = false;
 
-  <div class="footer">
-    <span>MOODFLICK — powered by Llama 3.3 via Groq + TMDB</span>
-    <span>press Enter to analyze</span>
-  </div>
+      function setStatus(msg, type) {
+        const bar = document.getElementById("statusBar");
+        bar.className = type || "";
+        if (msg) {
+          bar.textContent = msg;
+          bar.style.display = "block";
+          if (type === "loading") bar.classList.add("pulsing");
+        } else {
+          bar.style.display = "none";
+        }
+      }
 
-</div>
+      function handleKey(e) {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          analyze();
+        }
+      }
 
-<script>
-const MOOD_EMOJI = {
-  happy:'😄', sad:'😢', heartbreak:'💔', moving_on:'🚀', excited:'⚡',
-  scared:'😱', romantic:'❤️', angry:'🔥', anxious:'😬', bored:'😑',
-  lonely:'🌧️', nostalgic:'🌅', inspired:'✨', confused:'🌀', peaceful:'🌿',
-  dark:'🌑', hopeful:'🌤️', empowered:'💪', adventurous:'🧭', cozy:'☕'
-};
+      async function analyze() {
+        if (isLoading) return;
+        const text = document.getElementById("moodText").value.trim();
+        if (!text) return;
 
-let currentMode = 'movie';
-let currentMoods = [];
-let isLoading = false;
+        isLoading = true;
+        document.getElementById("analyzeBtn").disabled = true;
+        document.getElementById("results").style.display = "none";
+        document.getElementById("moodBadge").style.display = "none";
+        setStatus("LLAMA IS READING YOUR SOUL...", "loading");
 
-function setStatus(msg, type) {
-  const bar = document.getElementById('statusBar');
-  bar.className = type || '';
-  if (msg) {
-    bar.textContent = msg;
-    bar.style.display = 'block';
-    if (type === 'loading') bar.classList.add('pulsing');
-  } else {
-    bar.style.display = 'none';
-  }
-}
+        try {
+          const res = await fetch("/api/mood", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text }),
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || "Mood analysis failed");
 
-function handleKey(e) {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); analyze(); }
-}
+          currentMoods = Array.isArray(data.moods)
+            ? data.moods
+            : [data.moods || "bored"];
 
-async function analyze() {
-  if (isLoading) return;
-  const text = document.getElementById('moodText').value.trim();
-  if (!text) return;
-
-  isLoading = true;
-  document.getElementById('analyzeBtn').disabled = true;
-  document.getElementById('results').style.display = 'none';
-  document.getElementById('moodBadge').style.display = 'none';
-  setStatus('LLAMA IS READING YOUR SOUL...', 'loading');
-
-  try {
-    const res = await fetch('/api/mood', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text })
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Mood analysis failed');
-
-    currentMoods = Array.isArray(data.moods) ? data.moods : [data.moods || 'bored'];
-
-    // Show mood badges
-    const badge = document.getElementById('moodBadge');
-    badge.style.display = 'flex';
-    badge.innerHTML = currentMoods.map((m, i) => `
+          // Show mood badges
+          const badge = document.getElementById("moodBadge");
+          badge.style.display = "flex";
+          badge.innerHTML = currentMoods
+            .map(
+              (m, i) => `
       <span style="
         display:inline-flex;align-items:center;gap:5px;
         padding:6px 12px;
         border:2.5px solid var(--black);
-        background:${i === 0 ? 'var(--yellow)' : i === 1 ? '#fff' : '#eee'};
-        font-size:${i === 0 ? '16px' : '13px'};
+        background:${i === 0 ? "var(--yellow)" : i === 1 ? "#fff" : "#eee"};
+        font-size:${i === 0 ? "16px" : "13px"};
         opacity:${i === 0 ? 1 : i === 1 ? 0.8 : 0.6};
-      ">${MOOD_EMOJI[m] || '🎭'} ${m.replace(/_/g,' ').toUpperCase()}</span>
-    `).join('');
+      ">${MOOD_EMOJI[m] || "🎭"} ${m.replace(/_/g, " ").toUpperCase()}</span>
+    `,
+            )
+            .join("");
 
-    await fetchMedia('movie');
-  } catch (e) {
-    setStatus('// ERROR: ' + e.message, 'error');
-    isLoading = false;
-    document.getElementById('analyzeBtn').disabled = false;
-  }
-}
+          await fetchMedia("movie");
+        } catch (e) {
+          setStatus("// ERROR: " + e.message, "error");
+          isLoading = false;
+          document.getElementById("analyzeBtn").disabled = false;
+        }
+      }
 
-async function fetchMedia(mode) {
-  currentMode = mode;
-  document.getElementById('btnMovies').className = 'toggle-btn' + (mode === 'movie' ? ' active' : '');
-  document.getElementById('btnSeries').className = 'toggle-btn' + (mode === 'tv' ? ' active' : '');
-  document.getElementById('modeLabel').textContent = mode === 'movie' ? 'MOVIES' : 'SERIES';
-  document.getElementById('moodLabel').textContent = currentMoods[0]?.replace(/_/g,' ').toUpperCase() || '—';
-  document.getElementById('results').style.display = 'none';
-  setStatus('FETCHING ' + (mode === 'movie' ? 'MOVIES' : 'SERIES') + '...', 'loading');
+      async function fetchMedia(mode) {
+        currentMode = mode;
+        document.getElementById("btnMovies").className =
+          "toggle-btn" + (mode === "movie" ? " active" : "");
+        document.getElementById("btnSeries").className =
+          "toggle-btn" + (mode === "tv" ? " active" : "");
+        document.getElementById("modeLabel").textContent =
+          mode === "movie" ? "MOVIES" : "SERIES";
+        document.getElementById("moodLabel").textContent =
+          currentMoods[0]?.replace(/_/g, " ").toUpperCase() || "—";
+        document.getElementById("results").style.display = "none";
+        setStatus(
+          "FETCHING " + (mode === "movie" ? "MOVIES" : "SERIES") + "...",
+          "loading",
+        );
 
-  try {
-    const res = await fetch('/api/movies', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ moods: currentMoods, mode })
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Failed to fetch results');
-    if (!data.results || !data.results.length) throw new Error('No results found for this mood');
+        try {
+          const res = await fetch("/api/movies", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ moods: currentMoods, mode }),
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || "Failed to fetch results");
+          if (!data.results || !data.results.length)
+            throw new Error("No results found for this mood");
 
-    renderCards(data.results);
-    setStatus(null);
-    document.getElementById('results').style.display = 'block';
-  } catch (e) {
-    setStatus('// ERROR: ' + e.message, 'error');
-  } finally {
-    isLoading = false;
-    document.getElementById('analyzeBtn').disabled = false;
-  }
-}
+          renderCards(data.results);
+          setStatus(null);
+          document.getElementById("results").style.display = "block";
+        } catch (e) {
+          setStatus("// ERROR: " + e.message, "error");
+        } finally {
+          isLoading = false;
+          document.getElementById("analyzeBtn").disabled = false;
+        }
+      }
 
-function renderCards(items) {
-  const grid = document.getElementById('cardsGrid');
-  grid.innerHTML = '';
-  items.forEach((item, i) => {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.innerHTML = `
+      function renderCards(items) {
+        const grid = document.getElementById("cardsGrid");
+        grid.innerHTML = "";
+        items.forEach((item, i) => {
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
       <span class="card-num">${i + 1}</span>
-      ${item.poster
-        ? `<img class="card-img" src="${item.poster}" alt="${item.title}" loading="lazy">`
-        : `<div class="card-no-img">NO POSTER</div>`
+      ${
+        item.poster
+          ? `<img class="card-img" src="${item.poster}" alt="${item.title}" loading="lazy">`
+          : `<div class="card-no-img">NO POSTER</div>`
       }
       <div class="card-body">
         <div class="card-title">${item.title}</div>
         <div class="card-meta">
-          <span class="card-year">${item.year || '—'}</span>
+          <span class="card-year">${item.year || "—"}</span>
           <span class="card-rating">★ ${item.rating}</span>
         </div>
       </div>
     `;
-    grid.appendChild(card);
-  });
-}
+          grid.appendChild(card);
+        });
+      }
 
-function switchMode(mode) {
-  if (mode === currentMode || !currentMoods.length || isLoading) return;
-  isLoading = true;
-  document.getElementById('analyzeBtn').disabled = true;
-  fetchMedia(mode);
-}
+      function switchMode(mode) {
+        if (mode === currentMode || !currentMoods.length || isLoading) return;
+        isLoading = true;
+        document.getElementById("analyzeBtn").disabled = true;
+        fetchMedia(mode);
+      }
 
-function reset() {
-  document.getElementById('moodText').value = '';
-  document.getElementById('results').style.display = 'none';
-  document.getElementById('moodBadge').style.display = 'none';
-  setStatus(null);
-  currentMoods = [];
-  document.getElementById('moodText').focus();
-}
-</script>
-</body>
+      function reset() {
+        document.getElementById("moodText").value = "";
+        document.getElementById("results").style.display = "none";
+        document.getElementById("moodBadge").style.display = "none";
+        setStatus(null);
+        currentMoods = [];
+        document.getElementById("moodText").focus();
+      }
+    </script>
+  </body>
 </html>
