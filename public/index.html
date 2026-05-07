@@ -123,13 +123,12 @@
   .btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important;box-shadow:var(--shadow)!important}
 
   .mood-badge{
-    font-family:'Bebas Neue',sans-serif;
-    font-size:18px;
-    letter-spacing:1px;
-    padding:8px 16px;
-    border:var(--border);
-    background:var(--yellow);
     display:none;
+    flex-wrap:wrap;
+    gap:6px;
+    align-items:center;
+    font-family:'Bebas Neue',sans-serif;
+    letter-spacing:1px;
   }
 
   /* TOGGLE */
@@ -332,33 +331,15 @@
 </div>
 
 <script>
-const MOOD_GENRE_MAP = {
-  happy:     [35, 16],
-  sad:       [18, 10749],
-  excited:   [28, 12],
-  scared:    [27, 53],
-  romantic:  [10749, 18],
-  angry:     [53, 80],
-  anxious:   [9648, 53],
-  bored:     [28, 12, 35],
-  lonely:    [18, 10751],
-  nostalgic: [10402, 16],
-  inspired:  [18, 99],
-  confused:  [9648, 878],
-  peaceful:  [10751, 10402],
-  dark:      [80, 27],
-  hopeful:   [18, 12]
-};
-
 const MOOD_EMOJI = {
-  happy:'😄', sad:'😢', excited:'⚡', scared:'😱', romantic:'❤️',
-  angry:'🔥', anxious:'😬', bored:'😑', lonely:'🌧️', nostalgic:'🌅',
-  inspired:'✨', confused:'🌀', peaceful:'🌿', dark:'🌑', hopeful:'🌤️'
+  happy:'😄', sad:'😢', heartbreak:'💔', moving_on:'🚀', excited:'⚡',
+  scared:'😱', romantic:'❤️', angry:'🔥', anxious:'😬', bored:'😑',
+  lonely:'🌧️', nostalgic:'🌅', inspired:'✨', confused:'🌀', peaceful:'🌿',
+  dark:'🌑', hopeful:'🌤️', empowered:'💪', adventurous:'🧭', cozy:'☕'
 };
 
 let currentMode = 'movie';
-let currentMoodWord = '';
-let currentGenres = '';
+let currentMoods = [];
 let isLoading = false;
 
 function setStatus(msg, type) {
@@ -375,16 +356,6 @@ function setStatus(msg, type) {
 
 function handleKey(e) {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); analyze(); }
-}
-
-function closestMood(word) {
-  const moods = Object.keys(MOOD_GENRE_MAP);
-  for (const m of moods) if (word.includes(m) || m.includes(word)) return m;
-  if (word.includes('fun') || word.includes('joy') || word.includes('cheer')) return 'happy';
-  if (word.includes('fear') || word.includes('terrif') || word.includes('horror')) return 'scared';
-  if (word.includes('mel') || word.includes('depress') || word.includes('grief')) return 'sad';
-  if (word.includes('love') || word.includes('crush') || word.includes('date')) return 'romantic';
-  return 'bored';
 }
 
 async function analyze() {
@@ -407,14 +378,21 @@ async function analyze() {
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Mood analysis failed');
 
-    let mood = (data.mood || '').toLowerCase().replace(/[^a-z]/g, '');
-    if (!MOOD_GENRE_MAP[mood]) mood = closestMood(mood);
-    currentMoodWord = mood;
-    currentGenres = MOOD_GENRE_MAP[mood].slice(0, 2).join(',');
+    currentMoods = Array.isArray(data.moods) ? data.moods : [data.moods || 'bored'];
 
+    // Show mood badges
     const badge = document.getElementById('moodBadge');
-    badge.style.display = 'inline-block';
-    badge.textContent = (MOOD_EMOJI[mood] || '🎭') + ' MOOD: ' + mood.toUpperCase();
+    badge.style.display = 'flex';
+    badge.innerHTML = currentMoods.map((m, i) => `
+      <span style="
+        display:inline-flex;align-items:center;gap:5px;
+        padding:6px 12px;
+        border:2.5px solid var(--black);
+        background:${i === 0 ? 'var(--yellow)' : i === 1 ? '#fff' : '#eee'};
+        font-size:${i === 0 ? '16px' : '13px'};
+        opacity:${i === 0 ? 1 : i === 1 ? 0.8 : 0.6};
+      ">${MOOD_EMOJI[m] || '🎭'} ${m.replace(/_/g,' ').toUpperCase()}</span>
+    `).join('');
 
     await fetchMedia('movie');
   } catch (e) {
@@ -429,7 +407,7 @@ async function fetchMedia(mode) {
   document.getElementById('btnMovies').className = 'toggle-btn' + (mode === 'movie' ? ' active' : '');
   document.getElementById('btnSeries').className = 'toggle-btn' + (mode === 'tv' ? ' active' : '');
   document.getElementById('modeLabel').textContent = mode === 'movie' ? 'MOVIES' : 'SERIES';
-  document.getElementById('moodLabel').textContent = currentMoodWord.toUpperCase();
+  document.getElementById('moodLabel').textContent = currentMoods[0]?.replace(/_/g,' ').toUpperCase() || '—';
   document.getElementById('results').style.display = 'none';
   setStatus('FETCHING ' + (mode === 'movie' ? 'MOVIES' : 'SERIES') + '...', 'loading');
 
@@ -437,7 +415,7 @@ async function fetchMedia(mode) {
     const res = await fetch('/api/movies', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ genres: currentGenres, mode })
+      body: JSON.stringify({ moods: currentMoods, mode })
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Failed to fetch results');
@@ -479,7 +457,7 @@ function renderCards(items) {
 }
 
 function switchMode(mode) {
-  if (mode === currentMode || !currentMoodWord || isLoading) return;
+  if (mode === currentMode || !currentMoods.length || isLoading) return;
   isLoading = true;
   document.getElementById('analyzeBtn').disabled = true;
   fetchMedia(mode);
@@ -490,7 +468,7 @@ function reset() {
   document.getElementById('results').style.display = 'none';
   document.getElementById('moodBadge').style.display = 'none';
   setStatus(null);
-  currentMoodWord = '';
+  currentMoods = [];
   document.getElementById('moodText').focus();
 }
 </script>
