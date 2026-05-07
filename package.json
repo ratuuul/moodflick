@@ -1,0 +1,8 @@
+{
+  "name": "moodflick",
+  "version": "1.0.0",
+  "description": "AI mood-based movie suggestion site",
+  "scripts": {
+    "dev": "vercel dev"
+  }
+}
